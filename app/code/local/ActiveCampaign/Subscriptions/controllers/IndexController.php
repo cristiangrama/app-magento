@@ -3,15 +3,15 @@ class ActiveCampaign_Subscriptions_IndexController extends Mage_Core_Controller_
 {
     public function indexAction()
     {
-    	
-    	/*
+        
+        /*
     	 * Load an object by id 
     	 * Request looking like:
     	 * http://site.com/subscriptions?id=15 
     	 *  or
     	 * http://site.com/subscriptions/id/15 	
     	 */
-    	/* 
+        /* 
 		$subscriptions_id = $this->getRequest()->getParam('id');
 
   		if($subscriptions_id != null && $subscriptions_id != '')	{
@@ -20,11 +20,11 @@ class ActiveCampaign_Subscriptions_IndexController extends Mage_Core_Controller_
 			$subscriptions = null;
 		}	
 		*/
-		
-		 /*
+        
+         /*
     	 * If no param we load a the last created item
     	 */ 
-    	/*
+        /*
     	if($subscriptions == null) {
 			$resource = Mage::getSingleton('core/resource');
 			$read= $resource->getConnection('core_read');
@@ -40,8 +40,8 @@ class ActiveCampaign_Subscriptions_IndexController extends Mage_Core_Controller_
 		Mage::register('subscriptions', $subscriptions);
 		*/
 
-			
-		$this->loadLayout();     
-		$this->renderLayout();
+            
+        $this->loadLayout();     
+        $this->renderLayout();
     }
 }

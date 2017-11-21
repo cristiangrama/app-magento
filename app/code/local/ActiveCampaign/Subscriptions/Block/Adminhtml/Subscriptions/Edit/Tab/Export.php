@@ -2,22 +2,23 @@
 
 class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Export extends Mage_Adminhtml_Block_Widget_Form
 {
-	protected function dbg($var, $continue = 0, $element = "pre")
-	{
-	  echo "<" . $element . ">";
-	  echo "Vartype: " . gettype($var) . "\n";
-	  if ( is_array($var) )
-	  {
-	  	echo "Elements: " . count($var) . "\n\n";
-	  }
-	  elseif ( is_string($var) )
-	  {
-			echo "Length: " . strlen($var) . "\n\n";
-	  }
-	  print_r($var);
-	  echo "</" . $element . ">";
-		if (!$continue) exit();
-	}
+    protected function dbg($var, $continue = 0, $element = "pre")
+    {
+      echo "<" . $element . ">";
+      echo "Vartype: " . gettype($var) . "\n";
+      if (is_array($var))
+      {
+          echo "Elements: " . count($var) . "\n\n";
+      }
+      elseif (is_string($var))
+      {
+            echo "Length: " . strlen($var) . "\n\n";
+      }
+
+      print_r($var);
+      echo "</" . $element . ">";
+        if (!$continue) exit();
+    }
 
   protected function _prepareForm()
   {
@@ -25,8 +26,8 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Export
       $this->setForm($form);
       $fieldset = $form->addFieldset('subscriptions_form', array('legend'=>Mage::helper('subscriptions')->__('Export Newsletter Contacts To ActiveCampaign')));
 
-			// gets all customers
-			/*
+            // gets all customers
+            /*
 			$customer_collection = Mage::getModel('customer/customer')->getCollection()->addAttributeToSelect('*');
 			$customers = array();
 			foreach ($customer_collection as $customer) {
@@ -35,30 +36,32 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Export
 			*/
 //$this->dbg($customers);
 
-			// gets all customers that are subscribed to the newsletter
-			$contacts = Mage::getResourceModel('newsletter/contact_collection')->showStoreInfo()->showCustomerInfo()->getData();
+            // gets all customers that are subscribed to the newsletter
+            $contacts = Mage::getResourceModel('newsletter/contact_collection')->showStoreInfo()->showCustomerInfo()->getData();
 //$this->dbg($contacts);
 
-			$connection = Mage::registry('subscriptions_data')->getData();
+            $connection = Mage::registry('subscriptions_data')->getData();
 //$this->dbg($connection);
 
-			if ($connection) {
-				$api_url = $connection["api_url"];
-				$api_key = $connection["api_key"];
+            if ($connection) {
+                $api_url = $connection["api_url"];
+                $api_key = $connection["api_key"];
 
-				$ac = new ActiveCampaign($api_url, $api_key);
+                $ac = new ActiveCampaign($api_url, $api_key);
+            }
 
-
-			}
-
-      $fieldset->addField('export_note', 'note', array(
+      $fieldset->addField(
+          'export_note', 'note', array(
           'text'     => Mage::helper('subscriptions')->__('Check the box below, then click the Save Connection button to export ' . count($contacts) . ' contacts to ActiveCampaign.'),
-      ));
+          )
+      );
 
-      $fieldset->addField('export_confirm', 'checkbox', array(
+      $fieldset->addField(
+          'export_confirm', 'checkbox', array(
           'label'     => Mage::helper('subscriptions')->__('Confirm?'),
           'name'      => 'export_confirm',
-      ));
+          )
+      );
 
       /*
       $fieldset->addField('list_value', 'multiselect', array(
@@ -68,17 +71,18 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Export
       ));
       */
 
-      if ( Mage::getSingleton('adminhtml/session')->getSubscriptionsData() ) {
-      		$data = Mage::getSingleton('adminhtml/session')->getSubscriptionsData();
-					$data["export_confirm"] = 1;
+      if (Mage::getSingleton('adminhtml/session')->getSubscriptionsData()) {
+              $data = Mage::getSingleton('adminhtml/session')->getSubscriptionsData();
+                    $data["export_confirm"] = 1;
           $form->setValues($data);
           Mage::getSingleton('adminhtml/session')->setSubscriptionsData(null);
       }
-      elseif ( Mage::registry('subscriptions_data') ) {
-      		$data = Mage::registry('subscriptions_data')->getData();
-					$data["export_confirm"] = 1;
+      elseif (Mage::registry('subscriptions_data')) {
+              $data = Mage::registry('subscriptions_data')->getData();
+                    $data["export_confirm"] = 1;
           $form->setValues($data);
       }
+
       return parent::_prepareForm();
   }
 }

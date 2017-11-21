@@ -11,22 +11,23 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Grid extends Ma
       //$this->setSaveParametersInSession(true);
   }
 
-	protected function dbg($var, $continue = 0, $element = "pre")
-	{
-	  echo "<" . $element . ">";
-	  echo "Vartype: " . gettype($var) . "\n";
-	  if ( is_array($var) )
-	  {
-	  	echo "Elements: " . count($var) . "\n\n";
-	  }
-	  elseif ( is_string($var) )
-	  {
-			echo "Length: " . strlen($var) . "\n\n";
-	  }
-	  print_r($var);
-	  echo "</" . $element . ">";
-		if (!$continue) exit();
-	}
+    protected function dbg($var, $continue = 0, $element = "pre")
+    {
+      echo "<" . $element . ">";
+      echo "Vartype: " . gettype($var) . "\n";
+      if (is_array($var))
+      {
+          echo "Elements: " . count($var) . "\n\n";
+      }
+      elseif (is_string($var))
+      {
+            echo "Length: " . strlen($var) . "\n\n";
+      }
+
+      print_r($var);
+      echo "</" . $element . ">";
+        if (!$continue) exit();
+    }
 
   protected function _prepareCollection()
   {
@@ -37,7 +38,7 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Grid extends Ma
 
   protected function _prepareColumns()
   {
-  		/*
+          /*
       $this->addColumn('subscriptions_id', array(
           'header'    => Mage::helper('subscriptions')->__('ID'),
           'align'     =>'right',
@@ -46,14 +47,16 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Grid extends Ma
       ));
       */
 
-      $this->addColumn('title', array(
+      $this->addColumn(
+          'title', array(
           'header'    => Mage::helper('subscriptions')->__('Title'),
           'align'     =>'left',
-      		'width'     => '250px',
+              'width'     => '250px',
           'index'     => 'title',
-      ));
+          )
+      );
 
-	  /*
+      /*
       $this->addColumn('content', array(
 			'header'    => Mage::helper('subscriptions')->__('Item Content'),
 			'width'     => '150px',
@@ -61,33 +64,37 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Grid extends Ma
       ));
 	  */
 
-			$collection_data = Mage::getModel('subscriptions/subscriptions')->getCollection()->getData();
+            $collection_data = Mage::getModel('subscriptions/subscriptions')->getCollection()->getData();
 
-			$lists_ = array();
-			foreach ($collection_data as $connection) {
-				$lists = json_decode($connection["lists"]);
+            $lists_ = array();
+            foreach ($collection_data as $connection) {
+                $lists = json_decode($connection["lists"]);
 //$this->dbg($lists);
-				if ($lists) {
-					foreach ($lists as $list) {
-						$list = get_object_vars($list);
-						if (!preg_match("/0$/", $list["value"])) {
-							$lists_[ $list["value"] ] = $list["label"];
-						}
-					}
-				}
-			}
+                if ($lists) {
+                    foreach ($lists as $list) {
+                        $list = get_object_vars($list);
+                        if (!preg_match("/0$/", $list["value"])) {
+                            $lists_[ $list["value"] ] = $list["label"];
+                        }
+                    }
+                }
+            }
+
 //$this->dbg($lists_);
 
-      $this->addColumn('list_value', array(
+      $this->addColumn(
+          'list_value', array(
           'header'    => Mage::helper('subscriptions')->__('Lists'),
           'align'     => 'left',
           'width'     => '300px',
           'index'     => 'list_value',
           'type'      => 'options',
           'options'   => $lists_,
-      ));
+          )
+      );
 
-      $this->addColumn('status', array(
+      $this->addColumn(
+          'status', array(
           'header'    => Mage::helper('subscriptions')->__('Status'),
           'align'     => 'left',
           'width'     => '80px',
@@ -97,9 +104,11 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Grid extends Ma
               1 => 'Enabled',
               2 => 'Disabled',
           ),
-      ));
+          )
+      );
 
-        $this->addColumn('action',
+        $this->addColumn(
+            'action',
             array(
                 'header'    =>  Mage::helper('subscriptions')->__('Action'),
                 'width'     => '100',
@@ -116,29 +125,33 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Grid extends Ma
                 'sortable'  => false,
                 'index'     => 'stores',
                 'is_system' => true,
-        ));
+            )
+        );
 
-		$this->addExportType('*/*/exportCsv', Mage::helper('subscriptions')->__('CSV'));
-		$this->addExportType('*/*/exportXml', Mage::helper('subscriptions')->__('XML'));
+        $this->addExportType('*/*/exportCsv', Mage::helper('subscriptions')->__('CSV'));
+        $this->addExportType('*/*/exportXml', Mage::helper('subscriptions')->__('XML'));
 
       return parent::_prepareColumns();
   }
 
-	protected function _prepareMassaction()
-  {
-		$this->setMassactionIdField('subscriptions_id');
-		$this->getMassactionBlock()->setFormFieldName('subscriptions');
+    protected function _prepareMassaction()
+    {
+        $this->setMassactionIdField('subscriptions_id');
+        $this->getMassactionBlock()->setFormFieldName('subscriptions');
 
-        $this->getMassactionBlock()->addItem('delete', array(
+        $this->getMassactionBlock()->addItem(
+            'delete', array(
              'label'    => Mage::helper('subscriptions')->__('Delete'),
              'url'      => $this->getUrl('*/*/massDelete'),
              'confirm'  => Mage::helper('subscriptions')->__('Are you sure?')
-        ));
+            )
+        );
 
         $statuses = Mage::getSingleton('subscriptions/status')->getOptionArray();
 
         array_unshift($statuses, array('label'=>'', 'value'=>''));
-        $this->getMassactionBlock()->addItem('status', array(
+        $this->getMassactionBlock()->addItem(
+            'status', array(
              'label'=> Mage::helper('subscriptions')->__('Change status'),
              'url'  => $this->getUrl('*/*/massStatus', array('_current'=>true)),
              'additional' => array(
@@ -150,9 +163,10 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Grid extends Ma
                          'values' => $statuses
                      )
              )
-			));
-			return $this;
-	}
+            )
+        );
+            return $this;
+    }
 
   public function getRowUrl($row)
   {

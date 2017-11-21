@@ -8,12 +8,14 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Connec
       $this->setForm($form);
       $fieldset = $form->addFieldset('subscriptions_form', array('legend'=>Mage::helper('subscriptions')->__('Add Connection Details')));
 
-      $fieldset->addField('title', 'text', array(
+      $fieldset->addField(
+          'title', 'text', array(
           'label'     => Mage::helper('subscriptions')->__('Title'),
           'class'     => 'required-entry',
           'required'  => true,
           'name'      => 'title',
-      ));
+          )
+      );
 
       /*
       $fieldset->addField('filename', 'file', array(
@@ -23,7 +25,8 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Connec
 	  	));
 	  	*/
 
-      $fieldset->addField('status', 'select', array(
+      $fieldset->addField(
+          'status', 'select', array(
           'label'     => Mage::helper('subscriptions')->__('Status'),
           'name'      => 'status',
           'values'    => array(
@@ -37,21 +40,26 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Connec
                   'label'     => Mage::helper('subscriptions')->__('Disabled'),
               ),
           ),
-      ));
+          )
+      );
 
-      $fieldset->addField('api_url', 'text', array(
+      $fieldset->addField(
+          'api_url', 'text', array(
           'label'     => Mage::helper('subscriptions')->__('API URL'),
           'class'     => 'required-entry',
           'required'  => true,
           'name'      => 'api_url',
-      ));
+          )
+      );
 
-      $fieldset->addField('api_key', 'text', array(
+      $fieldset->addField(
+          'api_key', 'text', array(
           'label'     => Mage::helper('subscriptions')->__('API Key'),
           'class'     => 'required-entry',
           'required'  => true,
           'name'      => 'api_key',
-      ));
+          )
+      );
 
       /*
       $fieldset->addField('content', 'editor', array(
@@ -64,13 +72,14 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Connec
       ));
       */
 
-      if ( Mage::getSingleton('adminhtml/session')->getSubscriptionsData() )
+      if (Mage::getSingleton('adminhtml/session')->getSubscriptionsData())
       {
           $form->setValues(Mage::getSingleton('adminhtml/session')->getSubscriptionsData());
           Mage::getSingleton('adminhtml/session')->setSubscriptionsData(null);
-      } elseif ( Mage::registry('subscriptions_data') ) {
+      } elseif (Mage::registry('subscriptions_data')) {
           $form->setValues(Mage::registry('subscriptions_data')->getData());
       }
+
       return parent::_prepareForm();
   }
 }
