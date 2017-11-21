@@ -51,8 +51,7 @@ vendor/bin/phpcbf ../app --standard=MEQP1
 vendor/bin/phpcs ../app --standard=MEQP1 --severity=10
 ```
 
-
-
-
-
+## Sources
+https://github.com/andreaskoch/dockerized-magento
+https://github.com/magento/marketplace-eqp
 
