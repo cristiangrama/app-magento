@@ -25,14 +25,14 @@ cd magento-coding-standard
 
 composer install
 
-# For all errors and warnings
-vendor/bin/phpcs ../app --standard=MEQP1
+# To see only the errors that are required to be fixed for Magento approval
+composer run lint
 
 # To autofix any errors or warnings that can be autofixed
-vendor/bin/phpcbf ../app --standard=MEQP1
+composer run autoformat
 
-# To see only the errors that are required to be fixed for Magento approval
-vendor/bin/phpcs ../app --standard=MEQP1 --severity=10
+# To see all warnings
+composer run lint-all
 ```
 
 ## Sources
