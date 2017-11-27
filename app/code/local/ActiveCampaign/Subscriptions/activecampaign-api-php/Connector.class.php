@@ -57,20 +57,9 @@ class AC_Connector
     /**
      * Standard debug function (nicely outputs variables).
      */
-    public function dbg($var, $continue = 0, $element = "pre", $extra = "") 
+    public function dbg($var, $continue = 0, $element = "pre", $extra = "")
     {
-      echo "<" . $element . ">";
-      echo "Vartype: " . gettype($var) . "\n";
-      if (is_array($var)) echo "Elements: " . count($var) . "\n";
-      elseif (is_string($var)) echo "Length: " . strlen($var) . "\n";
-      if ($extra) {
-          echo $extra . "\n";
-      }
-
-      echo "\n";
-      print_r($var);
-      echo "</" . $element . ">";
-        if (!$continue) exit();
+        //
     }
 
     /**
@@ -243,7 +232,7 @@ class AC_Connector
         }
 
         if ($this->debug) {
-            echo "<textarea style='height: 300px; width: 600px;'>" . $debug_str1 . "</textarea>";
+            // echo "<textarea style='height: 300px; width: 600px;'>" . $debug_str1 . "</textarea>";
         }
 
         $object->http_code = $http_code;

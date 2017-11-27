@@ -18,20 +18,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
     protected function dbg($var, $continue = 0, $element = "pre")
     {
-      echo "<" . $element . ">";
-      echo "Vartype: " . gettype($var) . "\n";
-      if (is_array($var))
-      {
-          echo "Elements: " . count($var) . "\n\n";
-      }
-      elseif (is_string($var))
-      {
-            echo "Length: " . strlen($var) . "\n\n";
-      }
-
-      print_r($var);
-      echo "</" . $element . ">";
-        if (!$continue) exit();
+      //
     }
 
     public function indexAction() 
@@ -330,6 +317,6 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
         $response->setHeader('Content-type', $contentType);
         $response->setBody($content);
         $response->sendResponse();
-        die;
+        return true;
     }
 }
