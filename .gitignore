@@ -1,7 +1,3 @@
 /.idea
 .DS_Store
-/magento/vendor
-/magento/web
-/magento/logs
-/magento-coding-standard/vendor
-/magento-coding-standard/cache
+/vendor/
