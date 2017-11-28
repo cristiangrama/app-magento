@@ -10,11 +10,31 @@ You may encounter an issue the first time you attempt to login to the admin area
 ./magento magerun cache:clean
 ./magento magerun index:reindex:all
 
-
 ./magento enter dockerizedmagento_cache_1
 
 # From within the docker container:
 redis-cli flushall
+```
+
+### Symlinking
+When a package is added to Magento, files are moved into a handful of places as defined by the `package.xml file`. In order to keep our files here nice and neat, but still have everything work in Magento, we need to set up a handful of symlinks. In your terminal, cd into `dockerized-magento` and then follow these commands:
+
+```bash
+# replace '...' with the path to your dev directory
+ln -s .../app-magento/app/code/local/ActiveCampaign web/app/code/community/ActiveCampaign
+
+ln -s .../app-magento/app/design/adminhtml/default/default/layout/subscriptions.xml web/app/design/adminhtml/default/default/layout/subscriptions.xml
+
+ln -s .../app-magento/app/design/adminhtml/default/default/template/subscriptions web/app/design/adminhtml/default/default/template/subscriptions
+
+ln -s .../app-magento/app/design/frontend/default/default/layout/subscriptions.xml web/app/design/frontend/default/default/layout/subscriptions.xml
+
+ln -s .../app-magento/app/design/frontend/default/default/template/subscriptions web/app/design/frontend/default/default/template/subscriptions
+
+ln -s .../app-magento/app/etc/modules/ActiveCampaign_Subscriptions.xml web/app/etc/modules/ActiveCampaign_Subscriptions.xml
+
+# This last one is tricky, you'll need to update the symlink every time you make a version change, ie, ActiveCampaign_Subscriptions-1.5.10.xml
+ln -s .../app-magento/app/package.xml web/var/package/ActiveCampaign_Subscriptions-{CURRENT VERSION}.xml
 ```
 
 ### Code clean up
