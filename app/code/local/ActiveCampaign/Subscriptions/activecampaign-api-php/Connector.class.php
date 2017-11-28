@@ -38,7 +38,7 @@ class AC_Connector
      *
      * Tests the API URL and key using the user_me API method.
      */
-    public function credentials_test() 
+    public function credentials_test()
     {
         $test_url = "{$this->url}&api_action=user_me&api_output={$this->output}";
         $r = $this->curl($test_url);
@@ -69,7 +69,7 @@ class AC_Connector
      * @param  string  custom_method  Any custom method that gets handled differently (such as how we process the response).
      * @return object                 The response object from the curl request.
      */
-    public function curl($url, $params_data = array(), $verb = "", $custom_method = "") 
+    public function curl($url, $params_data = array(), $verb = "", $custom_method = "")
     {
         if ($this->version == 1) {
             // find the method from the URL.
@@ -140,13 +140,19 @@ class AC_Connector
                                         $k = urlencode($k);
                                         $data .= "{$key_}[{$key}][{$k}]=" . urlencode($v) . "&";
                                     }
-                                }
-                                else {
+                                } else {
                                     $data .= "{$key_}[{$key}]=" . urlencode($value_) . "&";
                                 }
                             }
-                        }
-                        else {
+                        } elseif (preg_match('/^field\[.*,0\]/', $key)) {
+                            // if the $key is that of a field and the $value is that of an array
+                            if (is_array($value)) {
+                                // then join the values with double pipes
+                                $value = implode('||', $value);
+                            }
+
+                            $data .= "{$key}=" . urlencode($value) . "&";
+                        } else {
                             // IE: [group] => array(2 => 2, 3 => 3)
                             // normally we just want the key to be a string, IE: ["group[2]"] => 2
                             // but we want to allow passing both formats
@@ -157,8 +163,7 @@ class AC_Connector
                                 }
                             }
                         }
-                    }
-                    else {
+                    } else {
                         $data .= "{$key}=" . urlencode($value) . "&";
                     }
                 }
@@ -171,6 +176,7 @@ class AC_Connector
                 $data = array("data" => $params_data);
             }
 
+            $data = rtrim($data, "& ");
             curl_setopt($request, CURLOPT_HTTPHEADER, array("Expect:"));
             $debug_str1 .= "curl_setopt(\$ch, CURLOPT_HTTPHEADER, array(\"Expect:\"));\n";
             if ($this->debug) {
