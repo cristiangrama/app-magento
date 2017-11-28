@@ -7,78 +7,83 @@ require_once(Mage::getBaseDir() . "/app/code/community/ActiveCampaign/Subscripti
 class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mage_Adminhtml_Controller_action
 {
 
-	protected function _initAction() {
-		$this->loadLayout()
-			->_setActiveMenu('subscriptions/items')
-			->_addBreadcrumb(Mage::helper('adminhtml')->__('Connections Manager'), Mage::helper('adminhtml')->__('Connection Manager'));
+    protected function _initAction() 
+    {
+        $this->loadLayout()
+            ->_setActiveMenu('subscriptions/items')
+            ->_addBreadcrumb(Mage::helper('adminhtml')->__('Connections Manager'), Mage::helper('adminhtml')->__('Connection Manager'));
 
-		return $this;
-	}
+        return $this;
+    }
 
-	protected function dbg($var, $continue = 0, $element = "pre")
-	{
-	  echo "<" . $element . ">";
-	  echo "Vartype: " . gettype($var) . "\n";
-	  if ( is_array($var) )
-	  {
-	  	echo "Elements: " . count($var) . "\n\n";
-	  }
-	  elseif ( is_string($var) )
-	  {
-			echo "Length: " . strlen($var) . "\n\n";
-	  }
-	  print_r($var);
-	  echo "</" . $element . ">";
-		if (!$continue) exit();
-	}
+    protected function dbg($var, $continue = 0, $element = "pre")
+    {
+      echo "<" . $element . ">";
+      echo "Vartype: " . gettype($var) . "\n";
+      if (is_array($var))
+      {
+          echo "Elements: " . count($var) . "\n\n";
+      }
+      elseif (is_string($var))
+      {
+            echo "Length: " . strlen($var) . "\n\n";
+      }
 
-	public function indexAction() {
-		$this->_initAction()
-			->renderLayout();
-	}
+      print_r($var);
+      echo "</" . $element . ">";
+        if (!$continue) exit();
+    }
 
-	public function editAction() {
-		$id     = $this->getRequest()->getParam('id');
-		$model  = Mage::getModel('subscriptions/subscriptions')->load($id);
+    public function indexAction() 
+    {
+        $this->_initAction()
+            ->renderLayout();
+    }
 
-		if ($model->getId() || $id == 0) {
-			$data = Mage::getSingleton('adminhtml/session')->getFormData(true);
+    public function editAction() 
+    {
+        $id     = $this->getRequest()->getParam('id');
+        $model  = Mage::getModel('subscriptions/subscriptions')->load($id);
 
-			if (!empty($data)) {
-				$model->setData($data);
-			}
+        if ($model->getId() || $id == 0) {
+            $data = Mage::getSingleton('adminhtml/session')->getFormData(true);
 
-			Mage::register('subscriptions_data', $model);
+            if (!empty($data)) {
+                $model->setData($data);
+            }
 
-			$this->loadLayout();
-			$this->_setActiveMenu('subscriptions/items');
+            Mage::register('subscriptions_data', $model);
 
-			//$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Connection Manager'), Mage::helper('adminhtml')->__('Connection Manager'));
-			//$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item News'), Mage::helper('adminhtml')->__('Item News'));
+            $this->loadLayout();
+            $this->_setActiveMenu('subscriptions/items');
 
-			$this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
+            //$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Connection Manager'), Mage::helper('adminhtml')->__('Connection Manager'));
+            //$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item News'), Mage::helper('adminhtml')->__('Item News'));
 
-			$this->_addContent($this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit'))
-				->_addLeft($this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit_tabs'));
+            $this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
 
-			$this->renderLayout();
-		} else {
-			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('subscriptions')->__('Item does not exist'));
-			$this->_redirect('*/*/');
-		}
-	}
+            $this->_addContent($this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit'))
+                ->_addLeft($this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit_tabs'));
 
-	public function newAction() {
-		$this->_forward('edit');
-	}
+            $this->renderLayout();
+        } else {
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('subscriptions')->__('Item does not exist'));
+            $this->_redirect('*/*/');
+        }
+    }
 
-	public function saveAction() {
+    public function newAction() 
+    {
+        $this->_forward('edit');
+    }
 
-		if ($data = $this->getRequest()->getPost()) {
+    public function saveAction() 
+    {
 
+        if ($data = $this->getRequest()->getPost()) {
 //$this->dbg($data);
 
-			/*
+            /*
 			if (isset($_FILES['filename']['name']) && $_FILES['filename']['name'] != '') {
 				try {
 					// Starting upload
@@ -107,155 +112,154 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 			}
 			*/
 
-			$model = Mage::getModel('subscriptions/subscriptions');
+            $model = Mage::getModel('subscriptions/subscriptions');
 
-			$api_url = $data["api_url"];
-			$api_key = $data["api_key"];
+            $api_url = $data["api_url"];
+            $api_key = $data["api_key"];
 
-			$ac = new ActiveCampaign($api_url, $api_key);
+            $ac = new ActiveCampaign($api_url, $api_key);
 
-			$test_connection = $ac->credentials_test();
+            $test_connection = $ac->credentials_test();
 
-			if (!$test_connection) {
-				Mage::getSingleton("adminhtml/session")->addError("Invalid API URL or Key. Please check to make sure both values are correct.");
+            if (!$test_connection) {
+                Mage::getSingleton("adminhtml/session")->addError("Invalid API URL or Key. Please check to make sure both values are correct.");
         Mage::getSingleton('adminhtml/session')->setFormData($data);
         $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
         return;
-			}
-			else {
-				// get AC account details
-				$account = $ac->api("account/view");
-				$data["account_url"] = $account->account;
+            }
+            else {
+                // get AC account details
+                $account = $ac->api("account/view");
+                $data["account_url"] = $account->account;
 
-				//$data["cdate"] = "NOW()";
+                //$data["cdate"] = "NOW()";
 
-				$list_values = $data["list_value"];
-				$list_ids = array();
+                $list_values = $data["list_value"];
+                $list_ids = array();
 
-				// example (converts to): ["mthommes6.activehosted.com-5","mthommes6.activehosted.com-13"]
-				$data["list_value"] = json_encode($data["list_value"]);
-				$data["form_value"] = json_encode($data["form_value"]);
+                // example (converts to): ["mthommes6.activehosted.com-5","mthommes6.activehosted.com-13"]
+                $data["list_value"] = json_encode($data["list_value"]);
+                $data["form_value"] = json_encode($data["form_value"]);
 
 //$this->dbg($data);
 
-				$model->setData($data)->setId($this->getRequest()->getParam('id'));
+                $model->setData($data)->setId($this->getRequest()->getParam('id'));
 
-				if (isset($data["export_confirm"]) && (int)$data["export_confirm"]) {
+                if (isset($data["export_confirm"]) && (int)$data["export_confirm"]) {
+                    // exporting Newsletter contacts to ActiveCampaign
 
-					// exporting Newsletter contacts to ActiveCampaign
+                    // Try a couple different ways to get the contact data.
+                    // Some versions of Magento may only support one way or another.
+                    $contacts_magento = Mage::getResourceModel('newsletter/contact_collection');
+                    if ($contacts_magento) {
+                        $contacts_magento = $contacts_magento->showStoreInfo()->showCustomerInfo()->getData();
+                    } else {
+                        $contacts_magento = Mage::getModel('newsletter/subscriber')->getCollection()->getData();
+                    }
 
-					// Try a couple different ways to get the contact data.
-					// Some versions of Magento may only support one way or another.
-					$contacts_magento = Mage::getResourceModel('newsletter/contact_collection');
-					if ($contacts_magento) {
-						$contacts_magento = $contacts_magento->showStoreInfo()->showCustomerInfo()->getData();
-					} else {
-						$contacts_magento = Mage::getModel('newsletter/subscriber')->getCollection()->getData();
-					}
+                    $contacts_ac = array();
 
-					$contacts_ac = array();
+                    foreach ($list_values as $acct_listid) {
+                        // IE: mthommes6.activehosted.com-13
+                        $acct_listid = explode("-", $acct_listid);
+                        $list_ids[] = (int)$acct_listid[1];
+                    }
 
-					foreach ($list_values as $acct_listid) {
-						// IE: mthommes6.activehosted.com-13
-						$acct_listid = explode("-", $acct_listid);
-						$list_ids[] = (int)$acct_listid[1];
-					}
+                    foreach ($contacts_magento as $contact) {
+                        $contacts_ac_ = array(
+                            "email" => $contact["contact_email"],
+                            "first_name" => $contact["customer_firstname"],
+                            "last_name" => $contact["customer_lastname"],
+                        );
 
-					foreach ($contacts_magento as $contact) {
+                        // add lists
+                        $p = array();
+                        $status = array();
+                        foreach ($list_ids as $list_id) {
+                            $p[$list_id] = $list_id;
+                            $status[$list_id] = 1;
+                        }
 
-						$contacts_ac_ = array(
-							"email" => $contact["contact_email"],
-							"first_name" => $contact["customer_firstname"],
-							"last_name" => $contact["customer_lastname"],
-						);
-
-						// add lists
-						$p = array();
-						$status = array();
-						foreach ($list_ids as $list_id) {
-							$p[$list_id] = $list_id;
-							$status[$list_id] = 1;
-						}
-
-						$contacts_ac_["p"] = $p;
-						$contacts_ac_["status"] = $status;
+                        $contacts_ac_["p"] = $p;
+                        $contacts_ac_["status"] = $status;
 
 //$this->dbg($contacts_ac_);
 
-						$contacts_ac[] = $contacts_ac_;
-
-					}
+                        $contacts_ac[] = $contacts_ac_;
+                    }
 
 //$this->dbg($contacts_ac);
 
-					$contacts_ac_serialized = serialize($contacts_ac);
+                    $contacts_ac_serialized = serialize($contacts_ac);
 
-					$contact_request = $ac->api("contact/sync?service=magento", $contacts_ac_serialized);
+                    $contact_request = $ac->api("contact/sync?service=magento", $contacts_ac_serialized);
+                }
 
-				}
+                try {
+                    if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
+                        $model->setCreatedTime(now())
+                            ->setUpdateTime(now());
+                    } else {
+                        $model->setUpdateTime(now());
+                    }
 
-				try {
-					if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
-						$model->setCreatedTime(now())
-							->setUpdateTime(now());
-					} else {
-						$model->setUpdateTime(now());
-					}
+                    $model->save();
+                    Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('subscriptions')->__('Settings were successfully saved'));
+                    Mage::getSingleton('adminhtml/session')->setFormData(false);
 
-					$model->save();
-					Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('subscriptions')->__('Settings were successfully saved'));
-					Mage::getSingleton('adminhtml/session')->setFormData(false);
+                    if ($this->getRequest()->getParam('back')) {
+                        $this->_redirect('*/*/edit', array('id' => $model->getId()));
+                        return;
+                    }
 
-					if ($this->getRequest()->getParam('back')) {
-						$this->_redirect('*/*/edit', array('id' => $model->getId()));
-						return;
-					}
-					$this->_redirect('*/*/');
-					return;
-	      }
-	      catch (Exception $e) {
-	      	Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-	      	Mage::getSingleton('adminhtml/session')->setFormData($data);
-	      	$this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
-	      	return;
-	      }
-
-			}
-
-    }
+                    $this->_redirect('*/*/');
+                    return;
+                }
+          catch (Exception $e) {
+              Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+              Mage::getSingleton('adminhtml/session')->setFormData($data);
+              $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+              return;
+          }
+            }
+        }
 
     Mage::getSingleton('adminhtml/session')->addError(Mage::helper('subscriptions')->__('Unable to find item to save'));
     $this->_redirect('*/*/');
-	}
+    }
 
-	public function deleteAction() {
-		if( $this->getRequest()->getParam('id') > 0 ) {
-			try {
-				$model = Mage::getModel('subscriptions/subscriptions');
+    public function deleteAction() 
+    {
+        if($this->getRequest()->getParam('id') > 0) {
+            try {
+                $model = Mage::getModel('subscriptions/subscriptions');
 
-				$model->setId($this->getRequest()->getParam('id'))
-					->delete();
+                $model->setId($this->getRequest()->getParam('id'))
+                    ->delete();
 
-				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Item was successfully deleted'));
-				$this->_redirect('*/*/');
-			} catch (Exception $e) {
-				Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-				$this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
-			}
-		}
-		$this->_redirect('*/*/');
-	}
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Item was successfully deleted'));
+                $this->_redirect('*/*/');
+            } catch (Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+            }
+        }
 
-    public function massDeleteAction() {
+        $this->_redirect('*/*/');
+    }
+
+    public function massDeleteAction() 
+    {
         $subscriptionsIds = $this->getRequest()->getParam('subscriptions');
         if(!is_array($subscriptionsIds)) {
-			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__('Please select item(s)'));
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__('Please select item(s)'));
         } else {
             try {
                 foreach ($subscriptionsIds as $subscriptionsId) {
                     $subscriptions = Mage::getModel('subscriptions/subscriptions')->load($subscriptionsId);
                     $subscriptions->delete();
                 }
+
                 Mage::getSingleton('adminhtml/session')->addSuccess(
                     Mage::helper('adminhtml')->__(
                         'Total of %d record(s) were successfully deleted', count($subscriptionsIds)
@@ -265,6 +269,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
 
@@ -282,6 +287,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
                         ->setIsMassupdate(true)
                         ->save();
                 }
+
                 $this->_getSession()->addSuccess(
                     $this->__('Total of %d record(s) were successfully updated', count($subscriptionsIds))
                 );
@@ -289,6 +295,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
                 $this->_getSession()->addError($e->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
 
@@ -313,7 +320,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
     protected function _sendUploadResponse($fileName, $content, $contentType='application/octet-stream')
     {
         $response = $this->getResponse();
-        $response->setHeader('HTTP/1.1 200 OK','');
+        $response->setHeader('HTTP/1.1 200 OK', '');
         $response->setHeader('Pragma', 'public', true);
         $response->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true);
         $response->setHeader('Content-Disposition', 'attachment; filename='.$fileName);

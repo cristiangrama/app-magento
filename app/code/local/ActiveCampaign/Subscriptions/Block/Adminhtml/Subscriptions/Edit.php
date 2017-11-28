@@ -18,11 +18,13 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit extends Ma
         $this->_updateButton('delete', 'style', 'display: none;');
         $this->_updateButton('reset', 'style', 'display: none;');
 
-        $this->_addButton('saveandcontinue', array(
+        $this->_addButton(
+            'saveandcontinue', array(
             'label'     => Mage::helper('adminhtml')->__('Save And Continue Edit'),
             'onclick'   => 'saveAndContinueEdit()',
             'class'     => 'save',
-        ), -100);
+            ), -100
+        );
 
         $this->_formScripts[] = "
             function toggleEditor() {
@@ -41,7 +43,7 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit extends Ma
 
     public function getHeaderText()
     {
-        if( Mage::registry('subscriptions_data') && Mage::registry('subscriptions_data')->getId() ) {
+        if(Mage::registry('subscriptions_data') && Mage::registry('subscriptions_data')->getId()) {
             return Mage::helper('subscriptions')->__("Edit Connection '%s'", $this->htmlEscape(Mage::registry('subscriptions_data')->getTitle()));
         } else {
             return Mage::helper('subscriptions')->__('Add Connection');

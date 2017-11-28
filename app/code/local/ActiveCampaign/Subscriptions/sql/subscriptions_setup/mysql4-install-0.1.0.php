@@ -14,7 +14,8 @@ $installer->startSetup();
   `update_time` datetime NULL,
 */
 
-$installer->run("
+$installer->run(
+    "
 
 -- DROP TABLE IF EXISTS {$this->getTable('subscriptions')};
 CREATE TABLE {$this->getTable('subscriptions')} (
@@ -33,6 +34,7 @@ CREATE TABLE {$this->getTable('subscriptions')} (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO {$this->getTable('subscriptions')} (title, status, cdate) VALUES ('Default', 2, NOW());
-    ");
+    "
+);
 
 $installer->endSetup();

@@ -13,29 +13,37 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tabs exten
 
   protected function _beforeToHtml()
   {
-      $this->addTab('form_section_connection', array(
+      $this->addTab(
+          'form_section_connection', array(
           'label'     => Mage::helper('subscriptions')->__('API Information'),
           'title'     => Mage::helper('subscriptions')->__('API Information'),
           'content'   => $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit_tab_connection')->toHtml(),
-      ));
+          )
+      );
 
-      $this->addTab('form_section_lists', array(
+      $this->addTab(
+          'form_section_lists', array(
           'label'     => Mage::helper('subscriptions')->__('Lists'),
           'title'     => Mage::helper('subscriptions')->__('Lists'),
           'content'   => $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit_tab_list')->toHtml(),
-      ));
+          )
+      );
 
-      $this->addTab('form_section_forms', array(
+      $this->addTab(
+          'form_section_forms', array(
           'label'     => Mage::helper('subscriptions')->__('Forms'),
           'title'     => Mage::helper('subscriptions')->__('Forms'),
           'content'   => $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit_tab_form')->toHtml(),
-      ));
+          )
+      );
 
-      $this->addTab('form_section_export', array(
+      $this->addTab(
+          'form_section_export', array(
           'label'     => Mage::helper('subscriptions')->__('Export Magento Contacts'),
           'title'     => Mage::helper('subscriptions')->__('Export Magento Contacts'),
           'content'   => $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit_tab_export')->toHtml(),
-      ));
+          )
+      );
 
       return parent::_beforeToHtml();
   }

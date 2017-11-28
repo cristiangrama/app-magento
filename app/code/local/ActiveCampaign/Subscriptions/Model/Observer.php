@@ -6,201 +6,196 @@ define("ACTIVECAMPAIGN_URL", "");
 define("ACTIVECAMPAIGN_API_KEY", "");
 require_once(Mage::getBaseDir() . "/app/code/community/ActiveCampaign/Subscriptions/activecampaign-api-php/ActiveCampaign.class.php");
 
-class ActiveCampaign_Subscriptions_Model_Observer {
+class ActiveCampaign_Subscriptions_Model_Observer
+{
 
-protected function file_append($content) {
-	$handle = fopen("/var/www/html/magento/matt.log", "a");
-	if ( is_array($content) || is_object($content) ) $content = print_r($content, 1);
-	fwrite($handle, "\n" . date("m/d/Y, h:i", strtotime("now")) . ": " . $content);
-	fclose($handle);
+protected function file_append($content) 
+{
+    $handle = fopen("/var/www/html/magento/matt.log", "a");
+    if (is_array($content) || is_object($content)) $content = print_r($content, 1);
+    fwrite($handle, "\n" . date("m/d/Y, h:i", strtotime("now")) . ": " . $content);
+    fclose($handle);
 }
 
-	protected function dbg($var, $continue = 0, $element = "pre")
-	{
-	  echo "<" . $element . ">";
-	  echo "Vartype: " . gettype($var) . "\n";
-	  if ( is_array($var) )
-	  {
-	  	echo "Elements: " . count($var) . "\n\n";
-	  }
-	  elseif ( is_string($var) )
-	  {
-			echo "Length: " . strlen($var) . "\n\n";
-	  }
-	  print_r($var);
-	  echo "</" . $element . ">";
-		if (!$continue) exit();
-	}
+    protected function dbg($var, $continue = 0, $element = "pre")
+    {
+      echo "<" . $element . ">";
+      echo "Vartype: " . gettype($var) . "\n";
+      if (is_array($var))
+      {
+          echo "Elements: " . count($var) . "\n\n";
+      }
+      elseif (is_string($var))
+      {
+            echo "Length: " . strlen($var) . "\n\n";
+      }
 
-	public function connection_data() {
-		// get saved API connections
-		$collection = Mage::getModel("subscriptions/subscriptions")->getCollection();
-		$connection_data = $collection->getData();
+      print_r($var);
+      echo "</" . $element . ">";
+        if (!$continue) exit();
+    }
 
-		$api_url = $api_key = $list_value = "";
-		$list_ids = array();
-		$form_id = 0;
+    public function connection_data() 
+    {
+        // get saved API connections
+        $collection = Mage::getModel("subscriptions/subscriptions")->getCollection();
+        $connection_data = $collection->getData();
 
-		foreach ($connection_data as $connection) {
-			if ((int)$connection["status"] == 1) {
-				// find first one that is enabled
-				$api_url = $connection["api_url"];
-				$api_key = $connection["api_key"];
+        $api_url = $api_key = $list_value = "";
+        $list_ids = array();
+        $form_id = 0;
 
-				$list_value = $connection["list_value"];
-				if ($list_value) {
-					// example for single list saved: ["mthommes6.activehosted.com-13"]
-					// example for multiple lists saved: ["mthommes6.activehosted.com-5","mthommes6.activehosted.com-13"]
-					$list_values = json_decode($list_value);
-					foreach ($list_values as $acct_listid) {
-						// IE: mthommes6.activehosted.com-13
-						$acct_listid = explode("-", $acct_listid);
-						end($acct_listid); // go to the last item, which should be the list ID
-						$list_ids[] = (int)current($acct_listid);
-					}
-				}
+        foreach ($connection_data as $connection) {
+            if ((int)$connection["status"] == 1) {
+                // find first one that is enabled
+                $api_url = $connection["api_url"];
+                $api_key = $connection["api_key"];
 
-				$form_value = trim($connection["form_value"], "\"");
-				if ($form_value) {
-					// example form saved: "mthommes6.activehosted.com-1269"
-					$acct_formid = explode("-", $form_value);
-					$form_id = (int)$acct_formid[1];
-				}
+                $list_value = $connection["list_value"];
+                if ($list_value) {
+                    // example for single list saved: ["mthommes6.activehosted.com-13"]
+                    // example for multiple lists saved: ["mthommes6.activehosted.com-5","mthommes6.activehosted.com-13"]
+                    $list_values = json_decode($list_value);
+                    foreach ($list_values as $acct_listid) {
+                        // IE: mthommes6.activehosted.com-13
+                        $acct_listid = explode("-", $acct_listid);
+                        end($acct_listid); // go to the last item, which should be the list ID
+                        $list_ids[] = (int)current($acct_listid);
+                    }
+                }
 
-				break;
-			}
-		}
+                $form_value = trim($connection["form_value"], "\"");
+                if ($form_value) {
+                    // example form saved: "mthommes6.activehosted.com-1269"
+                    $acct_formid = explode("-", $form_value);
+                    $form_id = (int)$acct_formid[1];
+                }
 
-		return array(
-			"data" => $connection_data,
-			"api_url" => $api_url,
-			"api_key" => $api_key,
-			"list_ids" => $list_ids,
-			"form_id" => $form_id,
-		);
-	}
+                break;
+            }
+        }
 
-	public function register_subscribe(Varien_Event_Observer $observer) {
+        return array(
+            "data" => $connection_data,
+            "api_url" => $api_url,
+            "api_key" => $api_key,
+            "list_ids" => $list_ids,
+            "form_id" => $form_id,
+        );
+    }
 
-		// called when they initially register as a new customer
+    public function register_subscribe(Varien_Event_Observer $observer) 
+    {
 
-		$customer = $observer->getCustomer();
-		$customer_data = $customer->getData();
+        // called when they initially register as a new customer
 
-		if (isset($customer_data["is_subscribed"]) && (int)$customer_data["is_subscribed"]) {
+        $customer = $observer->getCustomer();
+        $customer_data = $customer->getData();
 
-			$connection = $this->connection_data();
+        if (isset($customer_data["is_subscribed"]) && (int)$customer_data["is_subscribed"]) {
+            $connection = $this->connection_data();
 
-			$customer_first_name = $customer_data["firstname"];
-			$customer_last_name = $customer_data["lastname"];
-			$customer_email = $customer_data["email"];
-			$group_id = $customer_data["group_id"];
-			$store_id = $customer_data["store_id"];
+            $customer_first_name = $customer_data["firstname"];
+            $customer_last_name = $customer_data["lastname"];
+            $customer_email = $customer_data["email"];
+            $group_id = $customer_data["group_id"];
+            $store_id = $customer_data["store_id"];
 
-			if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
+            if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
+                $ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
+                $test_connection = $ac->credentials_test();
 
-				$ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
-				$test_connection = $ac->credentials_test();
+                if ($test_connection) {
+                    $contact = array(
+                        "email" => $customer_email,
+                        "first_name" => $customer_first_name,
+                        "last_name" => $customer_last_name,
+                    );
 
-				if ($test_connection) {
+                    // add lists
+                    foreach ($connection["list_ids"] as $list_id) {
+                        $contact["p[{$list_id}]"] = $list_id;
+                        $contact["status[{$list_id}]"] = 1;
+                    }
 
-					$contact = array(
-						"email" => $customer_email,
-						"first_name" => $customer_first_name,
-						"last_name" => $customer_last_name,
-					);
+                    $contact["form"] = $connection["form_id"];
 
-					// add lists
-					foreach ($connection["list_ids"] as $list_id) {
-						$contact["p[{$list_id}]"] = $list_id;
-						$contact["status[{$list_id}]"] = 1;
-					}
+                    $contact_request = $ac->api("contact/sync?service=magento", $contact);
 
-					$contact["form"] = $connection["form_id"];
+                    if ((int)$contact_request->success) {
+                        // successful request
+                        //$contact_id = (int)$contact_request->contact_id;
+                    }
+                    else {
+                        // request failed
+                        //print_r($contact_request->error);
+                        //exit();
+                    }
+                }
+            }
+        }
 
-					$contact_request = $ac->api("contact/sync?service=magento", $contact);
+        return;
 
-					if ((int)$contact_request->success) {
-						// successful request
-						//$contact_id = (int)$contact_request->contact_id;
-					}
-					else {
-						// request failed
-						//print_r($contact_request->error);
-						//exit();
-					}
-				}
-			}
+    }
 
-		}
+    public function edit_subscribe(Varien_Event_Observer $observer) 
+    {
 
-		return;
+        // called when they update their profile (already registered as a customer)
 
-	}
+        $customer = $observer->getCustomer();
+        $customer_data = $customer->getData();
 
-	public function edit_subscribe(Varien_Event_Observer $observer) {
+        if (isset($customer_data["is_subscribed"])) {
+            $is_subscribed = (int)$customer_data["is_subscribed"];
+            $list_status = ($is_subscribed) ? 1 : 2;
 
-		// called when they update their profile (already registered as a customer)
+            $connection = $this->connection_data();
 
-		$customer = $observer->getCustomer();
-		$customer_data = $customer->getData();
+            $customer_first_name = $customer_data["firstname"];
+            $customer_last_name = $customer_data["lastname"];
+            $customer_email = $customer_data["email"];
+            $group_id = $customer_data["group_id"];
+            $store_id = $customer_data["store_id"];
 
-		if (isset($customer_data["is_subscribed"])) {
+            if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
+                $ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
+                $test_connection = $ac->credentials_test();
 
-			$is_subscribed = (int)$customer_data["is_subscribed"];
-			$list_status = ($is_subscribed) ? 1 : 2;
+                if ($test_connection) {
+                    $contact = array(
+                        "email" => $customer_email,
+                        "first_name" => $customer_first_name,
+                        "last_name" => $customer_last_name,
+                    );
 
-			$connection = $this->connection_data();
+                    // add lists
+                    foreach ($connection["list_ids"] as $list_id) {
+                        $contact["p[{$list_id}]"] = $list_id;
+                        $contact["status[{$list_id}]"] = $list_status;
+                    }
 
-			$customer_first_name = $customer_data["firstname"];
-			$customer_last_name = $customer_data["lastname"];
-			$customer_email = $customer_data["email"];
-			$group_id = $customer_data["group_id"];
-			$store_id = $customer_data["store_id"];
+                    $contact["form"] = $connection["form_id"];
 
-			if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
+                    $contact_request = $ac->api("contact/sync?service=magento", $contact);
 
-				$ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
-				$test_connection = $ac->credentials_test();
+                    if ((int)$contact_request->success) {
+                        // successful request
+                        //$contact_id = (int)$contact_request->contact_id;
+                    }
+                    else {
+                        // request failed
+                        //print_r($contact_request->error);
+                        //exit();
+                    }
+                }
+            }
+        }
 
-				if ($test_connection) {
+        return;
 
-					$contact = array(
-						"email" => $customer_email,
-						"first_name" => $customer_first_name,
-						"last_name" => $customer_last_name,
-					);
-
-					// add lists
-					foreach ($connection["list_ids"] as $list_id) {
-						$contact["p[{$list_id}]"] = $list_id;
-						$contact["status[{$list_id}]"] = $list_status;
-					}
-
-					$contact["form"] = $connection["form_id"];
-
-					$contact_request = $ac->api("contact/sync?service=magento", $contact);
-
-					if ((int)$contact_request->success) {
-						// successful request
-						//$contact_id = (int)$contact_request->contact_id;
-					}
-					else {
-						// request failed
-						//print_r($contact_request->error);
-						//exit();
-					}
-
-				}
-
-			}
-
-		}
-
-		return;
-
-	}
+    }
 
 }
 
-?>

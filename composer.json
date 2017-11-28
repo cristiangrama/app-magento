@@ -1,0 +1,20 @@
+{
+    "name": "activecampaign/app-magento",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/magento/marketplace-eqp"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "magento/marketplace-eqp": "~1.0.5"
+    },
+    "scripts": {
+        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths ../../magento/marketplace-eqp",
+        "post-update-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths ../../magento/marketplace-eqp",
+        "lint": "\"vendor/bin/phpcs\" ./app --standard=MEQP1 --severity=10",
+        "lint-all": "\"vendor/bin/phpcs\" ./app --standard=MEQP1",
+        "autoformat": "\"vendor/bin/phpcbf\" ./app --standard=MEQP1"
+    }
+}
