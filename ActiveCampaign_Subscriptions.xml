@@ -115,7 +115,6 @@
         <target>magecommunity</target>
         <target>magecommunity</target>
         <target>magecommunity</target>
-        <target>magecommunity</target>
     </target>
     <path>
         <path/>
@@ -147,7 +146,6 @@
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Tag.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Tracking.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/User.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Webhook.class.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Subscriptions.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions/Edit.php</path>
@@ -170,7 +168,6 @@
         <path>ActiveCampaign/Subscriptions/sql/subscriptions_setup/mysql4-install-0.1.0.php</path>
     </path>
     <type>
-        <type>file</type>
         <type>file</type>
         <type>file</type>
         <type>file</type>
@@ -271,10 +268,8 @@
         <include/>
         <include/>
         <include/>
-        <include/>
     </include>
     <ignore>
-        <ignore/>
         <ignore/>
         <ignore/>
         <ignore/>
