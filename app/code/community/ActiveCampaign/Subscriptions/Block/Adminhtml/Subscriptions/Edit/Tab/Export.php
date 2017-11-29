@@ -24,8 +24,8 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Export
 //$this->dbg($customers);
 
             // gets all customers that are subscribed to the newsletter
-            $contacts = Mage::getResourceModel('newsletter/contact_collection')->showStoreInfo()->showCustomerInfo()->getData();
-//$this->dbg($contacts);
+            $subscribers = Mage::getResourceModel('newsletter/subscriber_collection')->showStoreInfo()->showCustomerInfo()->getData();
+//$this->dbg($subscribers);
 
             $connection = Mage::registry('subscriptions_data')->getData();
 //$this->dbg($connection);
@@ -39,7 +39,7 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Export
 
       $fieldset->addField(
           'export_note', 'note', array(
-          'text'     => Mage::helper('subscriptions')->__('Check the box below, then click the Save Connection button to export ' . count($contacts) . ' contacts to ActiveCampaign.'),
+          'text'     => Mage::helper('subscriptions')->__('Check the box below, then click the Save Connection button to export ' . count($subscribers) . ' subscribers to ActiveCampaign.'),
           )
       );
 

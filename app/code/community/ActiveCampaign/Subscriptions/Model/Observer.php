@@ -27,6 +27,7 @@ protected function file_append($content)
         // get saved API connections
         $collection = Mage::getModel("subscriptions/subscriptions")->getCollection();
         $connection_data = $collection->getData();
+//$this->dbg($collection_data);
 
         $api_url = $api_key = $list_value = "";
         $list_ids = array();
@@ -78,6 +79,7 @@ protected function file_append($content)
 
         $customer = $observer->getCustomer();
         $customer_data = $customer->getData();
+//$this->dbg($customer_data);
 
         if (isset($customer_data["is_subscribed"]) && (int)$customer_data["is_subscribed"]) {
             $connection = $this->connection_data();
@@ -133,49 +135,48 @@ protected function file_append($content)
 
         $customer = $observer->getCustomer();
         $customer_data = $customer->getData();
+//$this->dbg($customer_data);
 
-        if (isset($customer_data["is_subscribed"])) {
-            $is_subscribed = (int)$customer_data["is_subscribed"];
-            $list_status = ($is_subscribed) ? 1 : 2;
+        $is_subscribed = (int)$customer_data["is_subscribed"];
+        $list_status = ($is_subscribed) ? 1 : 2;
 
-            $connection = $this->connection_data();
+        $connection = $this->connection_data();
 
-            $customer_first_name = $customer_data["firstname"];
-            $customer_last_name = $customer_data["lastname"];
-            $customer_email = $customer_data["email"];
-            $group_id = $customer_data["group_id"];
-            $store_id = $customer_data["store_id"];
+        $customer_first_name = $customer_data["firstname"];
+        $customer_last_name = $customer_data["lastname"];
+        $customer_email = $customer_data["email"];
+        $group_id = $customer_data["group_id"];
+        $store_id = $customer_data["store_id"];
 
-            if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
-                $ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
-                $test_connection = $ac->credentials_test();
+        if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
+            $ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
+            $test_connection = $ac->credentials_test();
 
-                if ($test_connection) {
-                    $contact = array(
-                        "email" => $customer_email,
-                        "first_name" => $customer_first_name,
-                        "last_name" => $customer_last_name,
-                    );
+            if ($test_connection) {
+                $contact = array(
+                    "email" => $customer_email,
+                    "first_name" => $customer_first_name,
+                    "last_name" => $customer_last_name,
+                );
 
-                    // add lists
-                    foreach ($connection["list_ids"] as $list_id) {
-                        $contact["p[{$list_id}]"] = $list_id;
-                        $contact["status[{$list_id}]"] = $list_status;
-                    }
+                // add lists
+                foreach ($connection["list_ids"] as $list_id) {
+                    $contact["p[{$list_id}]"] = $list_id;
+                    $contact["status[{$list_id}]"] = $list_status;
+                }
 
-                    $contact["form"] = $connection["form_id"];
+                $contact["form"] = $connection["form_id"];
 
-                    $contact_request = $ac->api("contact/sync?service=magento", $contact);
+                $contact_request = $ac->api("contact/sync?service=magento", $contact);
 
-                    if ((int)$contact_request->success) {
-                        // successful request
-                        //$contact_id = (int)$contact_request->contact_id;
-                    }
-                    else {
-                        // request failed
-                        //print_r($contact_request->error);
-                        //exit();
-                    }
+                if ((int)$contact_request->success) {
+                    // successful request
+                    //$contact_id = (int)$contact_request->contact_id;
+                }
+                else {
+                    // request failed
+                    //print_r($contact_request->error);
+                    //exit();
                 }
             }
         }

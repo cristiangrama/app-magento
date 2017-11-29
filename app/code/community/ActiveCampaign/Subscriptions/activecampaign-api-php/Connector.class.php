@@ -167,13 +167,10 @@ class AC_Connector
                         $data .= "{$key}=" . urlencode($value) . "&";
                     }
                 }
-
-                $data = rtrim($data, "& ");
-            }
-            else {
-                // Pass it as an array into the curl request.
-                // This avoids any issue where the transfer might get chunked or broken up due to a large post string/body.
-                $data = array("data" => $params_data);
+            } else {
+                // not an array - perhaps serialized or JSON string?
+                // just pass it as data
+                $data = "data={$params_data}";
             }
 
             $data = rtrim($data, "& ");

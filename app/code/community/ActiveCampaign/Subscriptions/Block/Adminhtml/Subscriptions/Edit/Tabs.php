@@ -39,8 +39,8 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tabs exten
 
       $this->addTab(
           'form_section_export', array(
-          'label'     => Mage::helper('subscriptions')->__('Export Magento Contacts'),
-          'title'     => Mage::helper('subscriptions')->__('Export Magento Contacts'),
+          'label'     => Mage::helper('subscriptions')->__('Export Magento Subscribers'),
+          'title'     => Mage::helper('subscriptions')->__('Export Magento Subscribers'),
           'content'   => $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_edit_tab_export')->toHtml(),
           )
       );
