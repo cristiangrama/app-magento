@@ -16,6 +16,14 @@ You may encounter an issue the first time you attempt to login to the admin area
 redis-cli flushall
 ```
 
+### Printing Errors
+By default, Magento does not print out errors on the error screen for 'safety'. To enable error printouts, do the following:
+
+```bash
+cd ~/path/to/dockerized-magento
+mv web/errors/local.xml.sample web/errors/local.xml
+```
+
 ### Symlinking
 When a package is added to Magento, files are moved into a handful of places as defined by the `package.xml file`. In order to keep our files here nice and neat, but still have everything work in Magento, we need to set up a handful of symlinks. In your terminal, cd into `dockerized-magento` and then follow these commands:
 
