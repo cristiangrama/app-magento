@@ -184,6 +184,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
                     } catch (Exception $e) {
                         // catch this because even a successful call throws an exception
                     }
+                }
 
                 try {
                     if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
@@ -211,12 +212,12 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
               $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
               return;
           }
-                }
             }
+        }
 
     Mage::getSingleton('adminhtml/session')->addError(Mage::helper('subscriptions')->__('Unable to find item to save'));
     $this->_redirect('*/*/');
-        }
+    }
 
     public function deleteAction()
     {
@@ -322,4 +323,4 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
         $response->sendResponse();
         return true;
     }
-    }
+}
