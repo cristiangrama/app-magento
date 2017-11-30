@@ -17,7 +17,7 @@
 <license_uri>https://www.activecampaign.com/hosted/terms.php</license_uri>
 <version>1.5.10</version>
 <stability>stable</stability>
-<notes>Updated version number in template file</notes>
+<notes>Fixes an issue with the bulk subscriber export.</notes>
 <authors>
     <name>
         <name>ActiveCampaign, Inc.</name>
