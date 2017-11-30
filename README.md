@@ -24,26 +24,8 @@ cd ~/path/to/dockerized-magento
 mv web/errors/local.xml.sample web/errors/local.xml
 ```
 
-### Symlinking
-When a package is added to Magento, files are moved into a handful of places as defined by the `package.xml file`. In order to keep our files here nice and neat, but still have everything work in Magento, we need to set up a handful of symlinks. In your terminal, cd into `dockerized-magento` and then follow these commands:
-
-```bash
-# replace '...' with the path to your dev directory
-ln -s .../app-magento/app/code/local/ActiveCampaign web/app/code/community/ActiveCampaign
-
-ln -s .../app-magento/app/design/adminhtml/default/default/layout/subscriptions.xml web/app/design/adminhtml/default/default/layout/subscriptions.xml
-
-ln -s .../app-magento/app/design/adminhtml/default/default/template/subscriptions web/app/design/adminhtml/default/default/template/subscriptions
-
-ln -s .../app-magento/app/design/frontend/default/default/layout/subscriptions.xml web/app/design/frontend/default/default/layout/subscriptions.xml
-
-ln -s .../app-magento/app/design/frontend/default/default/template/subscriptions web/app/design/frontend/default/default/template/subscriptions
-
-ln -s .../app-magento/app/etc/modules/ActiveCampaign_Subscriptions.xml web/app/etc/modules/ActiveCampaign_Subscriptions.xml
-
-# This last one is tricky, you'll need to update the symlink every time you make a version change, ie, ActiveCampaign_Subscriptions-1.5.10.xml
-ln -s .../app-magento/app/package.xml web/var/package/ActiveCampaign_Subscriptions-{CURRENT VERSION}.xml
-```
+### Updating Files
+When a package is added to Magento, files are moved into a handful of places as defined by the `package.xml file`. To move the files to their correct locations in a more efficient manner, you can use the `update-files` bash script. From the root of this repo (ie, your path should be `path/to/app-magento`), run the command `./update-files ~/path/to/dockerized-magento`. The script will remove the old files and update Magento with your new files.
 
 ### Code clean up
 Magento has very strict coding standards. Before you create a new package with the changes you've made, you'll need to confirm that they abide by these standards. To do so, you'll use their code standards checking tool. Here's the process:
