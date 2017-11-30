@@ -20,10 +20,10 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit extends Ma
 
         $this->_addButton(
             'saveandcontinue', array(
-            'label'     => Mage::helper('adminhtml')->__('Save And Continue Edit'),
-            'onclick'   => 'saveAndContinueEdit()',
-            'class'     => 'save',
-            ), -100
+            'label' => Mage::helper('adminhtml')->__('Save And Continue Edit'),
+            'onclick' => 'saveAndContinueEdit()',
+            'class' => 'save',
+        ), -100
         );
 
         $this->_formScripts[] = "
@@ -43,7 +43,7 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit extends Ma
 
     public function getHeaderText()
     {
-        if(Mage::registry('subscriptions_data') && Mage::registry('subscriptions_data')->getId()) {
+        if (Mage::registry('subscriptions_data') && Mage::registry('subscriptions_data')->getId()) {
             return Mage::helper('subscriptions')->__("Edit Connection '%s'", $this->htmlEscape(Mage::registry('subscriptions_data')->getTitle()));
         } else {
             return Mage::helper('subscriptions')->__('Add Connection');

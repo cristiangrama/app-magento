@@ -17,6 +17,6 @@ class ActiveCampaign_Subscriptions_Block_Subscriptions extends Mage_Core_Block_T
             $this->setData('subscriptions', Mage::registry('subscriptions'));
         }
 
-    return $this->getData('subscriptions');
+        return $this->getData('subscriptions');
     }
 }

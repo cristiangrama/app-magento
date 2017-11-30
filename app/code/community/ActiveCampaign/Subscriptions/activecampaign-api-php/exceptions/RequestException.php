@@ -2,7 +2,7 @@
 
 class RequestException extends \Exception
 {
-    
+
     private $failedRequestMessage;
 
     /**
@@ -10,7 +10,7 @@ class RequestException extends \Exception
      *
      * Set the failure message for this exception.
      */
-    public function setFailedMessage($message) 
+    public function setFailedMessage($message)
     {
         $this->failedRequestMessage = $message;
         $this->message = sprintf('An unexpected problem occurred with the API request. Some causes include: invalid JSON or XML returned. Here is the actual response from the server: ---- %s', $message);
@@ -21,7 +21,7 @@ class RequestException extends \Exception
      *
      * Get the failure message for this exception.
      */
-    public function getFailedMessage() 
+    public function getFailedMessage()
     {
         return $this->failedRequestMessage;
     }

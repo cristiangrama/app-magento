@@ -2,12 +2,7 @@
 
 class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-    protected function dbg($var, $continue = 0, $element = "pre")
-    {
-        //
-    }
-
-    protected function connection_data($connection_data) 
+    protected function connection_data($connection_data)
     {
 
         $api_url = $api_key = $list_value = "";
@@ -56,13 +51,11 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Form e
         $magento_form = new Varien_Data_Form();
         $this->setForm($magento_form);
 
-        $fieldset = $magento_form->addFieldset('subscriptions_form', array('legend'=>Mage::helper('subscriptions')->__('Choose Form (To use Opt-in settings)')));
+        $fieldset = $magento_form->addFieldset('subscriptions_form', array('legend' => Mage::helper('subscriptions')->__('Choose Form (To use Opt-in settings)')));
 
         $connection_ = Mage::registry('subscriptions_data')->getData();
-//$this->dbg($connection_,1);
 
         $connection = $this->connection_data(array($connection_));
-//$this->dbg($connection);
 
         $forms_ = array();
 
@@ -99,31 +92,28 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Form e
                     }
                 }
             }
-
-//$this->dbg($forms_,1);
         }
 
         // hidden field that stores all of the forms from the install (so we can reference data from them later, based on what they choose).
         $fieldset->addField(
             'forms', 'hidden', array(
-            'label'     => Mage::helper('subscriptions')->__('Forms'),
-            'name'      => 'forms',
+                'label' => Mage::helper('subscriptions')->__('Forms'),
+                'name' => 'forms',
             )
         );
 
         $fieldset->addField(
             'form_value', 'select', array(
-            'label'     => Mage::helper('subscriptions')->__('Forms'),
-            'name'      => 'form_value',
-            'values'    => $forms_,
+                'label' => Mage::helper('subscriptions')->__('Forms'),
+                'name' => 'form_value',
+                'values' => $forms_,
             )
         );
 
         if (Mage::getSingleton('adminhtml/session')->getSubscriptionsData()) {
             $data = Mage::getSingleton('adminhtml/session')->getSubscriptionsData();
             Mage::getSingleton('adminhtml/session')->setSubscriptionsData(null);
-        }
-        elseif (Mage::registry('subscriptions_data')) {
+        } elseif (Mage::registry('subscriptions_data')) {
             $data = Mage::registry('subscriptions_data')->getData();
         }
 
@@ -132,7 +122,5 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit_Tab_Form e
         $magento_form->setValues($data);
 
         return parent::_prepareForm();
-
     }
-
 }

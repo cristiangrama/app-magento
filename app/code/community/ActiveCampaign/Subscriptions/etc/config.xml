@@ -32,61 +32,61 @@
         </layout>
     </frontend>
     <admin>
-			<routers>
-				<adminhtml>
-					<args>
-						<modules>
-							<subscriptions after="Mage_Adminhtml">ActiveCampaign_Subscriptions_Adminhtml</subscriptions>
-						</modules>
-					</args>
-				</adminhtml>
-			</routers>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <subscriptions after="Mage_Adminhtml">ActiveCampaign_Subscriptions_Adminhtml</subscriptions>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
     </admin>
     <adminhtml>
-		<menu>
-			<subscriptions module="subscriptions">
-				<title>ActiveCampaign</title>
-				<sort_order>71</sort_order>               
-				<children>
-					<items module="subscriptions">
-						<title>Settings</title>
-						<sort_order>0</sort_order>
-						<action>adminhtml/subscriptions</action>
-					</items>
-				</children>
-			</subscriptions>
-      <newsletter>
-        <children>
-          <subscriptions_adminform translate="title" module="subscriptions">
-            <title>ActiveCampaign Settings</title>
-            <action>adminhtml/subscriptions</action>
-          </subscriptions_adminform>
-        </children>
-      </newsletter>
-		</menu>
-		<acl>
-			<resources>
-				<all>
-					<title>Allow Everything</title>
-				</all>
-				<admin>
-					<children>
-						<ActiveCampaign_Subscriptions>
-							<title>Subscriptions Module</title>
-							<sort_order>10</sort_order>
-						</ActiveCampaign_Subscriptions>
-					</children>
-				</admin>
-			</resources>
-		</acl>
-		<layout>
-			<updates>
-				<subscriptions>
-					<file>subscriptions.xml</file>
-				</subscriptions>
-			</updates>
-		</layout>
-    </adminhtml>   
+        <menu>
+            <subscriptions module="subscriptions">
+                <title>ActiveCampaign</title>
+                <sort_order>71</sort_order>
+                <children>
+                    <items module="subscriptions">
+                        <title>Settings</title>
+                        <sort_order>0</sort_order>
+                        <action>adminhtml/subscriptions</action>
+                    </items>
+                </children>
+            </subscriptions>
+            <newsletter>
+                <children>
+                    <subscriptions_adminform translate="title" module="subscriptions">
+                        <title>ActiveCampaign Settings</title>
+                        <action>adminhtml/subscriptions</action>
+                    </subscriptions_adminform>
+                </children>
+            </newsletter>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <ActiveCampaign_Subscriptions>
+                            <title>Subscriptions Module</title>
+                            <sort_order>10</sort_order>
+                        </ActiveCampaign_Subscriptions>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <subscriptions>
+                    <file>subscriptions.xml</file>
+                </subscriptions>
+            </updates>
+        </layout>
+    </adminhtml>
     <global>
         <models>
             <subscriptions>
@@ -102,26 +102,26 @@
                 </entities>
             </subscriptions_mysql4>
         </models>
-		    <events>
-		      <customer_register_success>
-		        <observers>
-		          <subscriptions>
-		            <class>subscriptions/observer</class>
-		            <method>register_subscribe</method>
-		            <type>singleton</type>
-		          </subscriptions>
-		        </observers>
-		      </customer_register_success>
-          <customer_save_after>
-            <observers>
-              <subscriptions>
-                <class>subscriptions/observer</class>
-                <method>edit_subscribe</method>
-                <type>singleton</type>
-              </subscriptions>
-            </observers>
-          </customer_save_after>
-		    </events>
+        <events>
+            <customer_register_success>
+                <observers>
+                    <subscriptions>
+                        <class>subscriptions/observer</class>
+                        <method>register_subscribe</method>
+                        <type>singleton</type>
+                    </subscriptions>
+                </observers>
+            </customer_register_success>
+            <customer_save_after>
+                <observers>
+                    <subscriptions>
+                        <class>subscriptions/observer</class>
+                        <method>edit_subscribe</method>
+                        <type>singleton</type>
+                    </subscriptions>
+                </observers>
+            </customer_save_after>
+        </events>
         <resources>
             <subscriptions_setup>
                 <setup>

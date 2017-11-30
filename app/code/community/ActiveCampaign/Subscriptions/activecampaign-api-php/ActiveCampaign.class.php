@@ -19,14 +19,14 @@ class ActiveCampaign extends AC_Connector
     public $debug = false;
     public $curl_response_error = "";
 
-    function __construct($url, $api_key, $api_user = "", $api_pass = "") 
+    function __construct($url, $api_key, $api_user = "", $api_pass = "")
     {
         $this->url_base = $this->url = $url;
         $this->api_key = $api_key;
         parent::__construct($url, $api_key, $api_user, $api_pass);
     }
 
-    function version($version) 
+    function version($version)
     {
         $this->version = (int)$version;
         if ($version == 2) {
@@ -34,7 +34,7 @@ class ActiveCampaign extends AC_Connector
         }
     }
 
-    function api($path, $post_data = array()) 
+    function api($path, $post_data = array())
     {
         // IE: "contact/view"
         $components = explode("/", $path);
@@ -55,15 +55,13 @@ class ActiveCampaign extends AC_Connector
             $method_arr = explode("?", $components[1]);
             $method = $method_arr[0];
             $params = $method_arr[1];
-        }
-        else {
+        } else {
             // just a method provided
             // IE: "contact/view
             if (isset($components[1])) {
                 $method = $components[1];
                 $params = "";
-            }
-            else {
+            } else {
                 return "Invalid method.";
             }
         }
@@ -72,15 +70,12 @@ class ActiveCampaign extends AC_Connector
         if ($component == "list") {
             // reserved word
             $component = "list_";
-        }
-        elseif ($component == "branding") {
+        } elseif ($component == "branding") {
             $component = "design";
-        }
-        elseif ($component == "sync") {
+        } elseif ($component == "sync") {
             $component = "contact";
             $method = "sync";
-        }
-        elseif ($component == "singlesignon") {
+        } elseif ($component == "singlesignon") {
             $component = "auth";
         }
 
@@ -133,4 +128,3 @@ require_once("Subscriber.class.php");
 require_once("Tag.class.php");
 require_once("Tracking.class.php");
 require_once("User.class.php");
-

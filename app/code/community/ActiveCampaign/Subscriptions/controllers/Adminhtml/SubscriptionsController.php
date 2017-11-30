@@ -6,7 +6,6 @@ require_once(Mage::getBaseDir() . "/app/code/community/ActiveCampaign/Subscripti
 
 class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mage_Adminhtml_Controller_action
 {
-
     protected function _initAction()
     {
         $this->loadLayout()
@@ -14,11 +13,6 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
             ->_addBreadcrumb(Mage::helper('adminhtml')->__('Connections Manager'), Mage::helper('adminhtml')->__('Connection Manager'));
 
         return $this;
-    }
-
-    protected function dbg($var, $continue = 0, $element = "pre")
-    {
-      //
     }
 
     public function indexAction()
@@ -29,8 +23,8 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
     public function editAction()
     {
-        $id     = $this->getRequest()->getParam('id');
-        $model  = Mage::getModel('subscriptions/subscriptions')->load($id);
+        $id = $this->getRequest()->getParam('id');
+        $model = Mage::getModel('subscriptions/subscriptions')->load($id);
 
         if ($model->getId() || $id == 0) {
             $data = Mage::getSingleton('adminhtml/session')->getFormData(true);
@@ -43,9 +37,6 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
             $this->loadLayout();
             $this->_setActiveMenu('subscriptions/items');
-
-            //$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Connection Manager'), Mage::helper('adminhtml')->__('Connection Manager'));
-            //$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item News'), Mage::helper('adminhtml')->__('Item News'));
 
             $this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
 
@@ -68,36 +59,6 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
     {
 
         if ($data = $this->getRequest()->getPost()) {
-//$this->dbg($data);
-
-            /*
-			if (isset($_FILES['filename']['name']) && $_FILES['filename']['name'] != '') {
-				try {
-					// Starting upload
-					$uploader = new Varien_File_Uploader('filename');
-
-					// Any extention would work
-	           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
-					$uploader->setAllowRenameFiles(false);
-
-					// Set the file upload mode
-					// false -> get the file directly in the specified folder
-					// true -> get the file in the product like folders
-					//	(file.jpg will go in something like /media/f/i/file.jpg)
-					$uploader->setFilesDispersion(false);
-
-					// We set media as the upload dir
-					$path = Mage::getBaseDir('media') . DS ;
-					$uploader->save($path, $_FILES['filename']['name'] );
-
-				} catch (Exception $e) {
-
-		        }
-
-		        //this way the name is saved in DB
-	  			$data['filename'] = $_FILES['filename']['name'];
-			}
-			*/
 
             $model = Mage::getModel('subscriptions/subscriptions');
 
@@ -110,16 +71,13 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
             if (!$test_connection) {
                 Mage::getSingleton("adminhtml/session")->addError("Invalid API URL or Key. Please check to make sure both values are correct.");
-        Mage::getSingleton('adminhtml/session')->setFormData($data);
-        $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
-        return;
-            }
-            else {
+                Mage::getSingleton('adminhtml/session')->setFormData($data);
+                $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+                return;
+            } else {
                 // get AC account details
                 $account = $ac->api("account/view");
                 $data["account_url"] = $account->account;
-
-                //$data["cdate"] = "NOW()";
 
                 $list_values = $data["list_value"];
                 $list_ids = array();
@@ -127,8 +85,6 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
                 // example (converts to): ["mthommes6.activehosted.com-5","mthommes6.activehosted.com-13"]
                 $data["list_value"] = json_encode($data["list_value"]);
                 $data["form_value"] = json_encode($data["form_value"]);
-
-//$this->dbg($data);
 
                 $model->setData($data)->setId($this->getRequest()->getParam('id'));
 
@@ -170,12 +126,8 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
                         $contacts_ac_["p"] = $p;
                         $contacts_ac_["status"] = $status;
 
-//$this->dbg($contacts_ac_);
-
                         $contacts_ac[] = $contacts_ac_;
                     }
-
-//$this->dbg($contacts_ac);
 
                     $contacts_ac_serialized = serialize($contacts_ac);
 
@@ -205,23 +157,22 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
                     $this->_redirect('*/*/');
                     return;
+                } catch (Exception $e) {
+                    Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                    Mage::getSingleton('adminhtml/session')->setFormData($data);
+                    $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+                    return;
                 }
-          catch (Exception $e) {
-              Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-              Mage::getSingleton('adminhtml/session')->setFormData($data);
-              $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
-              return;
-          }
             }
         }
 
-    Mage::getSingleton('adminhtml/session')->addError(Mage::helper('subscriptions')->__('Unable to find item to save'));
-    $this->_redirect('*/*/');
+        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('subscriptions')->__('Unable to find item to save'));
+        $this->_redirect('*/*/');
     }
 
     public function deleteAction()
     {
-        if($this->getRequest()->getParam('id') > 0) {
+        if ($this->getRequest()->getParam('id') > 0) {
             try {
                 $model = Mage::getModel('subscriptions/subscriptions');
 
@@ -242,7 +193,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
     public function massDeleteAction()
     {
         $subscriptionsIds = $this->getRequest()->getParam('subscriptions');
-        if(!is_array($subscriptionsIds)) {
+        if (!is_array($subscriptionsIds)) {
             Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__('Please select item(s)'));
         } else {
             try {
@@ -267,7 +218,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
     public function massStatusAction()
     {
         $subscriptionsIds = $this->getRequest()->getParam('subscriptions');
-        if(!is_array($subscriptionsIds)) {
+        if (!is_array($subscriptionsIds)) {
             Mage::getSingleton('adminhtml/session')->addError($this->__('Please select item(s)'));
         } else {
             try {
@@ -292,8 +243,8 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
     public function exportCsvAction()
     {
-        $fileName   = 'subscriptions.csv';
-        $content    = $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_grid')
+        $fileName = 'subscriptions.csv';
+        $content = $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_grid')
             ->getCsv();
 
         $this->_sendUploadResponse($fileName, $content);
@@ -301,20 +252,20 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
     public function exportXmlAction()
     {
-        $fileName   = 'subscriptions.xml';
-        $content    = $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_grid')
+        $fileName = 'subscriptions.xml';
+        $content = $this->getLayout()->createBlock('subscriptions/adminhtml_subscriptions_grid')
             ->getXml();
 
         $this->_sendUploadResponse($fileName, $content);
     }
 
-    protected function _sendUploadResponse($fileName, $content, $contentType='application/octet-stream')
+    protected function _sendUploadResponse($fileName, $content, $contentType = 'application/octet-stream')
     {
         $response = $this->getResponse();
         $response->setHeader('HTTP/1.1 200 OK', '');
         $response->setHeader('Pragma', 'public', true);
         $response->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true);
-        $response->setHeader('Content-Disposition', 'attachment; filename='.$fileName);
+        $response->setHeader('Content-Disposition', 'attachment; filename=' . $fileName);
         $response->setHeader('Last-Modified', date('r'));
         $response->setHeader('Accept-Ranges', 'bytes');
         $response->setHeader('Content-Length', strlen($content));

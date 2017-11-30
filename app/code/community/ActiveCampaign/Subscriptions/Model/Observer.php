@@ -8,26 +8,19 @@ require_once(Mage::getBaseDir() . "/app/code/community/ActiveCampaign/Subscripti
 
 class ActiveCampaign_Subscriptions_Model_Observer
 {
-
-protected function file_append($content) 
-{
-    $handle = fopen("/var/www/html/magento/matt.log", "a");
-    if (is_array($content) || is_object($content)) $content = print_r($content, 1);
-    fwrite($handle, "\n" . date("m/d/Y, h:i", strtotime("now")) . ": " . $content);
-    fclose($handle);
-}
-
-    protected function dbg($var, $continue = 0, $element = "pre")
+    protected function file_append($content)
     {
-      //
+        $handle = fopen("/var/www/html/magento/matt.log", "a");
+        if (is_array($content) || is_object($content)) $content = print_r($content, 1);
+        fwrite($handle, "\n" . date("m/d/Y, h:i", strtotime("now")) . ": " . $content);
+        fclose($handle);
     }
 
-    public function connection_data() 
+    public function connection_data()
     {
         // get saved API connections
         $collection = Mage::getModel("subscriptions/subscriptions")->getCollection();
         $connection_data = $collection->getData();
-//$this->dbg($collection_data);
 
         $api_url = $api_key = $list_value = "";
         $list_ids = array();
@@ -72,14 +65,11 @@ protected function file_append($content)
         );
     }
 
-    public function register_subscribe(Varien_Event_Observer $observer) 
+    public function register_subscribe(Varien_Event_Observer $observer)
     {
-
         // called when they initially register as a new customer
-
         $customer = $observer->getCustomer();
         $customer_data = $customer->getData();
-//$this->dbg($customer_data);
 
         if (isset($customer_data["is_subscribed"]) && (int)$customer_data["is_subscribed"]) {
             $connection = $this->connection_data();
@@ -87,8 +77,6 @@ protected function file_append($content)
             $customer_first_name = $customer_data["firstname"];
             $customer_last_name = $customer_data["lastname"];
             $customer_email = $customer_data["email"];
-            $group_id = $customer_data["group_id"];
-            $store_id = $customer_data["store_id"];
 
             if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
                 $ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
@@ -109,33 +97,19 @@ protected function file_append($content)
 
                     $contact["form"] = $connection["form_id"];
 
-                    $contact_request = $ac->api("contact/sync?service=magento", $contact);
-
-                    if ((int)$contact_request->success) {
-                        // successful request
-                        //$contact_id = (int)$contact_request->contact_id;
-                    }
-                    else {
-                        // request failed
-                        //print_r($contact_request->error);
-                        //exit();
-                    }
+                    $ac->api("contact/sync?service=magento", $contact);
                 }
             }
         }
 
         return;
-
     }
 
-    public function edit_subscribe(Varien_Event_Observer $observer) 
+    public function edit_subscribe(Varien_Event_Observer $observer)
     {
-
         // called when they update their profile (already registered as a customer)
-
         $customer = $observer->getCustomer();
         $customer_data = $customer->getData();
-//$this->dbg($customer_data);
 
         $is_subscribed = (int)$customer_data["is_subscribed"];
         $list_status = ($is_subscribed) ? 1 : 2;
@@ -145,8 +119,6 @@ protected function file_append($content)
         $customer_first_name = $customer_data["firstname"];
         $customer_last_name = $customer_data["lastname"];
         $customer_email = $customer_data["email"];
-        $group_id = $customer_data["group_id"];
-        $store_id = $customer_data["store_id"];
 
         if ($connection["api_url"] && $connection["api_key"] && $connection["list_ids"]) {
             $ac = new ActiveCampaign($connection["api_url"], $connection["api_key"]);
@@ -167,23 +139,10 @@ protected function file_append($content)
 
                 $contact["form"] = $connection["form_id"];
 
-                $contact_request = $ac->api("contact/sync?service=magento", $contact);
-
-                if ((int)$contact_request->success) {
-                    // successful request
-                    //$contact_id = (int)$contact_request->contact_id;
-                }
-                else {
-                    // request failed
-                    //print_r($contact_request->error);
-                    //exit();
-                }
+                $ac->api("contact/sync?service=magento", $contact);
             }
         }
 
         return;
-
     }
-
 }
-
