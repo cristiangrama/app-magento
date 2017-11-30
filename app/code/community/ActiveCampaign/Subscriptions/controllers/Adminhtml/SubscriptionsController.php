@@ -154,7 +154,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
                     foreach ($contacts_magento as $contact) {
                         $contacts_ac_ = array(
-                            "email" => $contact["contact_email"],
+                            "email" => isset($contact["contact_email"]) ? $contact["contact_email"] : $contact["subscriber_email"],
                             "first_name" => $contact["customer_firstname"],
                             "last_name" => $contact["customer_lastname"],
                         );
@@ -179,8 +179,11 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
 
                     $contacts_ac_serialized = serialize($contacts_ac);
 
-                    $contact_request = $ac->api("contact/sync?service=magento", $contacts_ac_serialized);
-                }
+                    try {
+                        $ac->api("contact/sync?service=magento", $contacts_ac_serialized);
+                    } catch (Exception $e) {
+                        // catch this because even a successful call throws an exception
+                    }
 
                 try {
                     if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
