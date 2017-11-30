@@ -7,7 +7,7 @@ require_once(Mage::getBaseDir() . "/app/code/community/ActiveCampaign/Subscripti
 class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mage_Adminhtml_Controller_action
 {
 
-    protected function _initAction() 
+    protected function _initAction()
     {
         $this->loadLayout()
             ->_setActiveMenu('subscriptions/items')
@@ -21,13 +21,13 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
       //
     }
 
-    public function indexAction() 
+    public function indexAction()
     {
         $this->_initAction()
             ->renderLayout();
     }
 
-    public function editAction() 
+    public function editAction()
     {
         $id     = $this->getRequest()->getParam('id');
         $model  = Mage::getModel('subscriptions/subscriptions')->load($id);
@@ -59,12 +59,12 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
         }
     }
 
-    public function newAction() 
+    public function newAction()
     {
         $this->_forward('edit');
     }
 
-    public function saveAction() 
+    public function saveAction()
     {
 
         if ($data = $this->getRequest()->getPost()) {
@@ -211,14 +211,14 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
               $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
               return;
           }
+                }
             }
-        }
 
     Mage::getSingleton('adminhtml/session')->addError(Mage::helper('subscriptions')->__('Unable to find item to save'));
     $this->_redirect('*/*/');
-    }
+        }
 
-    public function deleteAction() 
+    public function deleteAction()
     {
         if($this->getRequest()->getParam('id') > 0) {
             try {
@@ -238,7 +238,7 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
         $this->_redirect('*/*/');
     }
 
-    public function massDeleteAction() 
+    public function massDeleteAction()
     {
         $subscriptionsIds = $this->getRequest()->getParam('subscriptions');
         if(!is_array($subscriptionsIds)) {
@@ -322,4 +322,4 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
         $response->sendResponse();
         return true;
     }
-}
+    }
