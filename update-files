@@ -1,5 +1,16 @@
 #! /bin/bash
 
+# Clean up files and then check for errors
+composer run autoformat
+if [ $? -eq 1 ]; then
+    exit 1;
+fi
+
+composer run lint
+if [ $? -eq 1 ]; then
+    exit 1;
+fi
+
 am=$PWD
 
 # Go to the dockerized-magento repo
@@ -25,6 +36,11 @@ cp -R "$am"/app/design/frontend/default/default/template/subscriptions design/fr
 # Remove and replace the etc files
 rm etc/modules/ActiveCampaign_Subscriptions.xml
 cp "$am"/app/etc/modules/ActiveCampaign_Subscriptions.xml etc/modules/ActiveCampaign_Subscriptions.xml
+
+# Remove and replace the Local Package file
+cd ..
+rm var/connect/ActiveCampaign_Subscriptions.xml
+cp "$am"/ActiveCampaign_Subscriptions.xml var/connect/ActiveCampaign_Subscriptions.xml
 
 echo "Updated!"
 
