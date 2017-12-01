@@ -1,0 +1,47 @@
+#! /bin/bash
+
+# Clean up files and then check for errors
+composer run autoformat
+if [ $? -eq 1 ]; then
+    exit 1;
+fi
+
+composer run lint
+if [ $? -eq 1 ]; then
+    exit 1;
+fi
+
+am=$PWD
+
+# Go to the dockerized-magento repo
+cd "$1"/web/app
+
+# Remove and replace the ActiveCampaign directory with the newly changed files
+rm -rf code/community/ActiveCampaign
+cp -R "$am"/app/code/community/ActiveCampaign code/community/ActiveCampaign
+
+# Remove and replace the design files
+rm design/adminhtml/default/default/layout/subscriptions.xml
+cp "$am"/app/design/adminhtml/default/default/layout/subscriptions.xml design/adminhtml/default/default/layout/subscriptions.xml
+
+rm -rf design/adminhtml/default/default/template/subscriptions
+cp -R "$am"/app/design/adminhtml/default/default/template/subscriptions design/adminhtml/default/default/template/subscriptions
+
+rm design/frontend/default/default/layout/subscriptions.xml
+cp "$am"/app/design/frontend/default/default/layout/subscriptions.xml design/frontend/default/default/layout/subscriptions.xml
+
+rm -rf design/frontend/default/default/template/subscriptions
+cp -R "$am"/app/design/frontend/default/default/template/subscriptions design/frontend/default/default/template/subscriptions
+
+# Remove and replace the etc files
+rm etc/modules/ActiveCampaign_Subscriptions.xml
+cp "$am"/app/etc/modules/ActiveCampaign_Subscriptions.xml etc/modules/ActiveCampaign_Subscriptions.xml
+
+# Remove and replace the Local Package file
+cd ..
+rm var/connect/ActiveCampaign_Subscriptions.xml
+cp "$am"/ActiveCampaign_Subscriptions.xml var/connect/ActiveCampaign_Subscriptions.xml
+
+echo "Updated!"
+
+exit 0

@@ -17,7 +17,7 @@
 <license_uri>https://www.activecampaign.com/hosted/terms.php</license_uri>
 <version>1.5.10</version>
 <stability>stable</stability>
-<notes>Updated version number in template file</notes>
+<notes>Fixes an issue with the bulk subscriber export.</notes>
 <authors>
     <name>
         <name>ActiveCampaign, Inc.</name>
@@ -114,6 +114,7 @@
         <target>magecommunity</target>
         <target>magecommunity</target>
         <target>magecommunity</target>
+        <target>magecommunity</target>
     </target>
     <path>
         <path/>
@@ -123,17 +124,27 @@
         <path>frontend/default/default/layout/subscriptions.xml</path>
         <path>frontend/default/default/template/subscriptions/subscriptions.phtml</path>
         <path>modules/ActiveCampaign_Subscriptions.xml</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/exceptions/RequestException.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Account.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/ActiveCampaign.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Auth.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Automation.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Campaign.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/config.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Connector.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Contact.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Deal.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Design.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Form.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Group.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/List.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Message.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Contact.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Organization.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Segment.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Settings.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Subscriber.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Tag.class.php</path>
+        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Tracking.class.php</path>
         <path>ActiveCampaign/Subscriptions/activecampaign-api-php/User.class.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Subscriptions.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions.php</path>
@@ -143,6 +154,7 @@
         <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions/Edit/Tabs.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions/Edit/Tab/Connection.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions/Edit/Tab/Export.php</path>
+        <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions/Edit/Tab/Form.php</path>
         <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions/Edit/Tab/List.php</path>
         <path>ActiveCampaign/Subscriptions/controllers/IndexController.php</path>
         <path>ActiveCampaign/Subscriptions/controllers/Adminhtml/SubscriptionsController.php</path>
@@ -154,18 +166,9 @@
         <path>ActiveCampaign/Subscriptions/Model/Mysql4/Subscriptions.php</path>
         <path>ActiveCampaign/Subscriptions/Model/Mysql4/Subscriptions/Collection.php</path>
         <path>ActiveCampaign/Subscriptions/sql/subscriptions_setup/mysql4-install-0.1.0.php</path>
-        <path>ActiveCampaign/Subscriptions/Block/Adminhtml/Subscriptions/Edit/Tab/Form.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Webhook.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/exceptions/RequestException.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Automation.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Deal.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Segment.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Settings.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Tag.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Tracking.class.php</path>
-        <path>ActiveCampaign/Subscriptions/activecampaign-api-php/Subscriber.class.php</path>
     </path>
     <type>
+        <type>file</type>
         <type>file</type>
         <type>file</type>
         <type>file</type>
@@ -264,8 +267,10 @@
         <include/>
         <include/>
         <include/>
+        <include/>
     </include>
     <ignore>
+        <ignore/>
         <ignore/>
         <ignore/>
         <ignore/>
