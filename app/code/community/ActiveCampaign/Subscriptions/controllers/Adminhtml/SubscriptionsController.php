@@ -59,7 +59,6 @@ class ActiveCampaign_Subscriptions_Adminhtml_SubscriptionsController extends Mag
     {
 
         if ($data = $this->getRequest()->getPost()) {
-
             $model = Mage::getModel('subscriptions/subscriptions');
 
             $api_url = $data["api_url"];

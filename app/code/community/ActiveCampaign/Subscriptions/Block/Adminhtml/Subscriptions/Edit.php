@@ -23,7 +23,7 @@ class ActiveCampaign_Subscriptions_Block_Adminhtml_Subscriptions_Edit extends Ma
             'label' => Mage::helper('adminhtml')->__('Save And Continue Edit'),
             'onclick' => 'saveAndContinueEdit()',
             'class' => 'save',
-        ), -100
+            ), -100
         );
 
         $this->_formScripts[] = "
